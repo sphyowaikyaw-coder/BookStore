@@ -1,0 +1,200 @@
+﻿@model List<WebApp.View_Model.VM_TbBook>
+
+@{
+    Layout = "BackGround";
+}
+
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+    @section Slider{
+        <div class="owl-carousel owl-theme hero-slider">
+            
+                   
+    @foreach (var book in Model)
+    {
+                <div class="slide slide1" style="background-image : url(@book.BookCover)">
+                    
+                    <div class="container">
+                        <div class="row">
+            
+                            <div class="col-12 text-center text-white">
+                                <h6 class="text-white text-uppercase"></h6>
+                                <h1 class="display-3 my-4">@book.BookName<br />@book.BookAuthur</h1>
+                                <a href="#" class="btn btn-brand">Get</a>
+                                <a href="#" class="btn btn-outline-light ms-3">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        }
+                   
+               
+
+        </div>
+    }
+@section Milestone{
+        <section id="milestone">
+            <div class="container">
+                <div class="row text-center justify-content-center gy-4">
+                    <div class="col-lg-2 col-sm-6">
+                        <h1 class="display-4">
+                            @Model.Count+
+                        </h1>
+                        <p class="mb-0">Books</p>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <h1 class="display-4">45M</h1>
+                        <p class="mb-0">Lines of code</p>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <h1 class="display-4">190</h1>
+                        <p class="mb-0">Total Downloads</p>
+                    </div>
+                    <div class="col-lg-2 col-sm-6">
+                        <h1 class="display-4">380K</h1>
+                        <p class="mb-0">YouTube Subscribers</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+}
+
+    @section Services{
+        <section id="services" class="text-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="intro">
+                            <h6>Our BookLists</h6>
+                            <h1>What Book do you like?</h1>
+                            <p class="mx-auto">
+                                
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                @foreach (var book in Model)
+                {
+                        <div class="col-lg-4 col-md-6" >
+                            @* <div class="service" data-bs-toggle="modal" data-bs-target="#staticBackdrop@(book.BookId)" style="cursor: pointer;">
+                                        <img src="@book.BookCover" style="width: 150px; height: 150px; border-radius: 50%;" alt="">
+                                        <h5>@book.BookName</h5>
+                                        <p>
+                                            @book.Description
+                                        </p>
+                                    </div> *@
+                               
+                        <!-- Button trigger modal -->
+
+                        <figure class="book">
+
+                            <!-- Front Cover -->
+                            <ul class="hardcover_front">
+                                <li>
+                                    <div class="coverDesign yellow"
+                                         style="background-image:url('@book.BookCover'); background-size:cover; background-position:center;">
+
+                                        <span class="ribbon">Sold Out</span>
+
+                                        <h1>@book.BookName</h1>
+                                        <p>@book.BookAuthur</p>
+
+                                    </div>
+                                </li>
+                                <li></li>
+                            </ul>
+
+                            <!-- Pages -->
+                            <ul class="page">
+                                <li></li>
+                                <li>
+                                    <div style="padding:10px;">
+                                        
+                                        <h4>@book.BookName</h4>
+                                        <p style="font-size:12px;">
+                                            @book.Description
+                                        </p>
+                                        <p><b>Price:</b> @book.Price MMK</p>
+                                        <p><b>Date:</b> @book.ReleaveDate</p>
+                                    </div>
+                                </li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+
+                            <!-- Back Cover -->
+                            <ul class="hardcover_back">
+                                <li></li>
+                                <li></li>
+                            </ul>
+
+                            <!-- Spine -->
+                            <ul class="book_spine">
+                                <li></li>
+                                <li></li>
+                            </ul>
+
+                            <!-- Caption -->
+                            @* <figcaption>
+                                <h1>@book.BookName</h1>
+                                <span>By @book.BookAuthur</span>
+                                <p>@book.Description</p>
+                            </figcaption> *@
+
+                        </figure>
+
+                        </div>
+
+                        <!-- Modal -->
+                        @* <div class="modal fade" id="staticBackdrop@(book.BookId)" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header position-relative">
+
+                                        <img src="@book.BookCover"
+                                             alt="Alternate Text"
+                                             style="width: 80px; height: 80px; border-radius: 25% 50%;" />
+
+                                        <h5 class="modal-title position-absolute start-50 translate-middle-x"
+                                            id="staticBackdropLabel">
+                                            @book.BookName
+                                        </h5>
+
+                                        @* <button type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                        </button> *@
+                                        @*
+                                    </div>
+                                    <div class="modal-body">
+                                        <h6>Description : @book.Description</h6>
+                                        <h2>Author : @book.BookAuthur</h2>
+                                        <h6>Price : @book.Price</h6>
+                                        <h6>ReleaveDate : @book.ReleaveDate</h6>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                        @* <button type="button" class="btn btn-primary" href="#services">Understood</button> *@ @*
+                                    </div>
+                                </div>
+                            </div>
+                        </div> *@
+                }
+
+                </div>
+            </div>
+        </section>
+
+    }
+
+@section Reviews{
+}
+    </body>
+    </html>
