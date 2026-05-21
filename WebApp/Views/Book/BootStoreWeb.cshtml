@@ -114,7 +114,13 @@
                                 <li></li>
                                 <li>
                                     <div style="padding:10px;">
-                                        
+
+                                              
+                                                <i class="fa-regular fa-heart" style="position: absolute; right: 20px; cursor: pointer;" onclick="toggleHeart(event,'@book.BookCover','@book.BookName','@book.BookAuthur','@book.Price','@book.ReleaveDate','@book.Description',' @book.BookId')" ></i>
+
+                                                
+                                                 
+                                            <h6></h6>
                                         <h4>@book.BookName</h4>
                                         <p style="font-size:12px;">
                                             @book.Description
@@ -193,8 +199,103 @@
         </section>
 
     }
+    @section Portfolio{
+        
+            <h1 style="padding-top: 0px; margin-top: 0px; text-align: center;">Favorite Books</h1>
+        
+        <div class="row" id="fav-book">
+
+        </div>
+    }
 
 @section Reviews{
 }
-    </body>
+
+    <script>
+            function addToFavorites(bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId)
+            {
+                var favDiv = document.getElementById("fav-book");
+                var content = `
+                    <div  class="col-lg-4 col-md-6" id="${bookId}">
+                            <div>
+                                <figure class="book">
+
+                            <!-- Front Cover -->
+                            <ul class="hardcover_front">
+                                <li>
+                                    <div class="coverDesign yellow"
+                                         style="background-image:url('${bookCover}'); background-size:cover; background-position:center;">
+
+                                        <span class="ribbon">Sold Out</span>
+
+                                        <h1>${bookName}</h1>
+                                        <p>${bookAuthor}</p>
+
+                                    </div>
+                                </li>
+                                <li></li>
+                            </ul>
+
+                            <!-- Pages -->
+                            <ul class="page" style="text-align: center;">
+                                <li></li>
+                                <li>
+                                    <div style="padding:10px;">
+
+                                            <h6></h6>
+                                        <h4>${bookName}</h4>
+                                        <p style="font-size:12px;">
+                                            ${desc}
+                                        </p>
+                                        <p><b>Price:</b> ${price} MMK</p>
+                                        <p><b>Date:</b> ${releaseDate}</p>
+                                    </div>
+                                </li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+
+                            <!-- Back Cover -->
+                            <ul class="hardcover_back">
+                                <li></li>
+                                <li></li>
+                            </ul>
+
+                            <!-- Spine -->
+                            <ul class="book_spine">
+                                <li></li>
+                                <li></li>
+                            </ul>
+
+                        </figure>
+                            </div>
+                    </div>
+                `;
+                favDiv.innerHTML += content;
+
+            }
+            function removeFromFavorites(bookId) {
+                var bookElement = document.getElementById(bookId);
+                if (bookElement) {
+                    bookElement.remove();
+                }
+            }
+
+            function toggleHeart(e, bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId) {
+                var heartIcon = e.target;
+                heartIcon.classList.toggle('fa-solid');
+                heartIcon.classList.toggle('fa-regular');
+
+                if(heartIcon.classList.contains('fa-solid')) {
+                    addToFavorites(bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId);
+                } else {
+                    // Remove from favorites
+                    removeFromFavorites(bookId);
+                }
+                
+        }
+    </script>
+
+</body>
     </html>
