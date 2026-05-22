@@ -9,6 +9,7 @@ namespace WebApp.Controllers.Book
     {
         public async Task<IActionResult> BookList()
         {
+            
             List<BM_TbBook> books = await bookService.GetAllBooks();
             List<VM_TbBook> vmBooks = books.Select(book => new VM_TbBook
             {

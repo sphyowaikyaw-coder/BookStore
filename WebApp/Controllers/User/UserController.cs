@@ -32,6 +32,7 @@ namespace WebApp.Controllers.User
 
             if (isValid)
             {
+                HttpContext.Session.SetString("email", email);
                 return RedirectToAction("BookList", "Book");
             }
             else if(email == "admin@gmail.com" && password == "111111")

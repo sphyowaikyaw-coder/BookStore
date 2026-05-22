@@ -1,4 +1,5 @@
 using Dependency;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,13 @@ builder.Services.AddScoped<DAO.DAO.BookDAO, DAO.DAO.DAOImpl.BookDAOImpl>();
 builder.Services.AddScoped<Service.Service.BookService, Service.Service.ServiceImpl.BookServiceImpl>();
 builder.Services.AddScoped<Service.Service.FileService, Service.Service.ServiceImpl.FileServiceImpl>();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,7 +33,13 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = CookieSecurePolicy.Always
+});
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
