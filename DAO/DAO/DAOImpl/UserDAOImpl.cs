@@ -43,5 +43,18 @@ namespace DAO.DAO.DAOImpl
             }
         }
 
+        public async Task<TbUser> GetUserByEmail(string email)
+        {
+            try
+            {
+                return await bookDBContext.TbUsers.FirstOrDefaultAsync(u => u.Email == email);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
     }
 }

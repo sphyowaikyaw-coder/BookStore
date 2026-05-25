@@ -17,6 +17,9 @@ builder.Services.AddScoped<DAO.DAO.BookDAO, DAO.DAO.DAOImpl.BookDAOImpl>();
 builder.Services.AddScoped<Service.Service.BookService, Service.Service.ServiceImpl.BookServiceImpl>();
 builder.Services.AddScoped<Service.Service.FileService, Service.Service.ServiceImpl.FileServiceImpl>();
 
+builder.Services.AddScoped<DAO.DAO.PurchaseDAO, DAO.DAO.DAOImpl.PurchaseDAOImpl>();
+builder.Services.AddScoped<Service.Service.PurchaseService, Service.Service.ServiceImpl.PurchaseServiceImpl>();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

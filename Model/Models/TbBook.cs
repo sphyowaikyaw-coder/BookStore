@@ -20,4 +20,6 @@ public partial class TbBook
     public string? BookCover { get; set; }
 
     public bool? IsDelete { get; set; }
+
+    public virtual ICollection<TbPurchase> TbPurchases { get; set; } = new List<TbPurchase>();
 }

@@ -1,4 +1,5 @@
-﻿@model List<WebApp.View_Model.VM_TbBook>
+﻿@model WebApp.View_Model.VM_Book_Purchase
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
     Layout = "BackGround";
@@ -10,11 +11,14 @@
         <title></title>
     </head>
     <body>
+        @{
+        var email = HttpContextAccessor.HttpContext.Session.GetString("email") ?? "";
+        }
     @section Slider{
         <div class="owl-carousel owl-theme hero-slider">
             
                    
-    @foreach (var book in Model)
+    @foreach (var book in Model.Book)
     {
                 <div class="slide slide1" style="background-image : url(@book.BookCover)">
                     
@@ -42,13 +46,13 @@
                 <div class="row text-center justify-content-center gy-4">
                     <div class="col-lg-2 col-sm-6">
                         <h1 class="display-4">
-                            @Model.Count+
+                            @Model.Book.Count+
                         </h1>
                         <p class="mb-0">Books</p>
                     </div>
                     <div class="col-lg-2 col-sm-6">
-                        <h1 class="display-4">45M</h1>
-                        <p class="mb-0">Lines of code</p>
+                        <h1 class="display-4">0</h1>
+                        <p class="mb-0"></p>
                     </div>
                     <div class="col-lg-2 col-sm-6">
                         <h1 class="display-4">190</h1>
@@ -77,10 +81,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="row g-4">
-                @foreach (var book in Model)
+                <div class="row g-4" style="align-content: space-between;">
+                @foreach (var book in Model.Book)
                 {
-                        <div class="col-lg-4 col-md-6" >
+                        <div class="col-lg-4 col-md-6" style="margin-bottom: 20px; padding-left: 150px;">
                             @* <div class="service" data-bs-toggle="modal" data-bs-target="#staticBackdrop@(book.BookId)" style="cursor: pointer;">
                                         <img src="@book.BookCover" style="width: 150px; height: 150px; border-radius: 50%;" alt="">
                                         <h5>@book.BookName</h5>
@@ -116,7 +120,7 @@
                                     <div style="padding:10px;">
 
                                               
-                                                <i class="fa-regular fa-heart" style="position: absolute; right: 20px; cursor: pointer;" onclick="toggleHeart(event,'@book.BookCover','@book.BookName','@book.BookAuthur','@book.Price','@book.ReleaveDate','@book.Description',' @book.BookId')" ></i>
+                                                <i class="fa-regular fa-heart" style="position: absolute; right: 20px; cursor: pointer;" onclick="toggleHeart(event,'@book.BookCover','@book.BookName','@book.BookAuthur','@book.Price','@book.ReleaveDate','@book.Description', '@book.BookId', '@email')" ></i>
 
                                                 
                                                  
@@ -199,24 +203,97 @@
         </section>
 
     }
-    @section Portfolio{
+    @section Favorites{
         
             <h1 style="padding-top: 0px; margin-top: 0px; text-align: center;">Favorite Books</h1>
+        <form id="purchaseForm" method="post" asp-controller="Purchase" asp-action="CreatePurchase">
+            <div class="row" id="fav-book">
+            </div>
+            <div style="display: flex;
+                 justify-content: center;
+                 align-items: center; border: none;">
+                <button style=" color: blue; box-shadow:inherit; border: none;" type="submit" >၀ယ်မည်</button>
+            </div>
+        </form>
         
-        <div class="row" id="fav-book">
-
-        </div>
     }
-
+    @section Team{
+        <section id="purchase" class="text-center">
+            <div class="container">
+                @if(Model.Purchase == null)
+                {
+                    <h1>No purchases yet.</h1>
+                }
+    else {
+                @foreach(var purchase in Model.Purchase)
+                {
+                    var book = purchase.Book;
+                    var user = purchase.User;
+                    <h1>@book.BookName</h1>
+                    <p>Purchased by @user.UserName</p>
+                }
+    }
+            </div>
+            
+        </section>
+    }
 @section Reviews{
 }
 
     <script>
-            function addToFavorites(bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId)
+
+                document.addEventListener("DOMContentLoaded", function () {
+
+            const form = document.getElementById("purchaseForm");
+
+            form.addEventListener("submit", function (event) {
+
+                event.preventDefault();
+
+                // Remove old generated inputs
+                document.querySelectorAll(".generated-input").forEach(x => x.remove());
+
+                // Get all favorite items
+                const favItems = document.querySelectorAll(".fav-item");
+
+                favItems.forEach(function (item, index) {
+
+                    const bookId = item.querySelector(".bookId").value;
+                    const email = item.querySelector(".email").value;
+
+                    // BookId input
+                    const bookInput = document.createElement("input");
+                    bookInput.type = "hidden";
+                    bookInput.name = `vM_Save_Purchases[${index}].BookId`;
+                    bookInput.value = bookId;
+                    bookInput.classList.add("generated-input");
+
+                    // Email input
+                    const emailInput = document.createElement("input");
+                    emailInput.type = "hidden";
+                    emailInput.name = `vM_Save_Purchases[${index}].Email`;
+                    emailInput.value = email;
+                    emailInput.classList.add("generated-input");
+
+                    // Append to form
+                    form.appendChild(bookInput);
+                    form.appendChild(emailInput);
+                });
+
+                console.log(form.innerHTML);
+
+                // Submit form
+                form.submit();
+
+            });
+
+        });
+            
+            function addToFavorites(bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId, email)
             {
                 var favDiv = document.getElementById("fav-book");
                 var content = `
-                    <div  class="col-lg-4 col-md-6" id="${bookId}">
+                    <div  class="fav-item col-lg-4 col-md-6" style="margin-bottom: 50px; padding-left: 150px;" id="${bookId}">
                             <div>
                                 <figure class="book">
 
@@ -226,7 +303,12 @@
                                     <div class="coverDesign yellow"
                                          style="background-image:url('${bookCover}'); background-size:cover; background-position:center;">
 
-                                        <span class="ribbon">Sold Out</span>
+                                        <span 
+                                        // class="ribbon"
+                                        ><i class="fa-solid fa-heart "></i></span>
+
+                                        <input type="hidden" class="bookId" value="${bookId}"></input>
+                                        <input type="hidden" class="email" value="${email}"></input>
 
                                         <h1>${bookName}</h1>
                                         <p>${bookAuthor}</p>
@@ -276,19 +358,22 @@
 
             }
             function removeFromFavorites(bookId) {
-                var bookElement = document.getElementById(bookId);
-                if (bookElement) {
-                    bookElement.remove();
+                console.log("here toggle heart click..........." + bookId.trim());
+                if(bookId) {
+                    var bookElement = document.getElementById(bookId.trim());
+                    if (bookElement) {
+                        bookElement.remove();
+                    }
                 }
             }
 
-            function toggleHeart(e, bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId) {
+            function toggleHeart(e, bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId, email) {
                 var heartIcon = e.target;
                 heartIcon.classList.toggle('fa-solid');
                 heartIcon.classList.toggle('fa-regular');
 
                 if(heartIcon.classList.contains('fa-solid')) {
-                    addToFavorites(bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId);
+                    addToFavorites(bookCover, bookName, bookAuthor, price, releaseDate, desc, bookId, email);
                 } else {
                     // Remove from favorites
                     removeFromFavorites(bookId);

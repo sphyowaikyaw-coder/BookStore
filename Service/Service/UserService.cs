@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Business_Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace Service.Service
 {
     public interface UserService
     {
+        public Task<BM_TbUser> GetUserByEmail(string email);
         public Task<bool> CreateUser(string username, string email, string password);
 
         public Task<bool> CheckUser(string email, string password);

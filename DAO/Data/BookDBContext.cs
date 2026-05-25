@@ -17,6 +17,8 @@ public partial class BookDBContext : DbContext
 
     public virtual DbSet<TbBook> TbBooks { get; set; }
 
+    public virtual DbSet<TbPurchase> TbPurchases { get; set; }
+
     public virtual DbSet<TbUser> TbUsers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -27,7 +29,7 @@ public partial class BookDBContext : DbContext
     {
         modelBuilder.Entity<TbBook>(entity =>
         {
-            entity.HasKey(e => e.BookId).HasName("PK__TB_Book__3DE0C207E25F2D8F");
+            entity.HasKey(e => e.BookId).HasName("PK__TB_Book__3DE0C20787F6FFDD");
 
             entity.ToTable("TB_Book");
 
@@ -38,9 +40,26 @@ public partial class BookDBContext : DbContext
             entity.Property(e => e.Price).HasColumnType("decimal(12, 2)");
         });
 
+        modelBuilder.Entity<TbPurchase>(entity =>
+        {
+            entity.HasKey(e => e.PurchaseId).HasName("PK__TB_Purch__6B0A6BBECA445CF6");
+
+            entity.ToTable("TB_Purchase");
+
+            entity.Property(e => e.DateTime).HasColumnName("Date_Time");
+
+            entity.HasOne(d => d.Book).WithMany(p => p.TbPurchases)
+                .HasForeignKey(d => d.BookId)
+                .HasConstraintName("FK_TB_Purchase_TB_Book");
+
+            entity.HasOne(d => d.User).WithMany(p => p.TbPurchases)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_TB_Purchase_TB_User");
+        });
+
         modelBuilder.Entity<TbUser>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__TB_User__1788CC4C1C534CA6");
+            entity.HasKey(e => e.UserId).HasName("PK__TB_User__1788CC4C0E05BA5F");
 
             entity.ToTable("TB_User");
 

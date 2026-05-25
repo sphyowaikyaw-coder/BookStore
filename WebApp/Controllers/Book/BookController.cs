@@ -5,7 +5,7 @@ using WebApp.View_Model;
 
 namespace WebApp.Controllers.Book
 {
-    public class BookController(BookService bookService, FileService fileService) : Controller
+    public class BookController(BookService bookService, FileService fileService, PurchaseService purchaseService) : Controller
     {
         public async Task<IActionResult> BookList()
         {
@@ -21,7 +21,33 @@ namespace WebApp.Controllers.Book
                 Description = book.Description,
                 BookCover = book.BookCover
             }).ToList();
-            return View("Views/Book/BootStoreWeb.cshtml", vmBooks);
+            
+
+            List<BM_TbPurchase> purchase = await purchaseService.GetAllPurchases();
+            List<VM_TbPurchase> vmPurchases = purchase.Select(p => new VM_TbPurchase
+            {
+                PurchaseId = p.PurchaseId,
+                PurchaseDate = p.PurchaseDate,
+                Book = p.Book != null ? new VM_TbBook
+                {
+                    BookId = p.Book.BookId,
+                    BookName = p.Book.BookName,
+                    BookAuthur = p.Book.BookAuthur,
+                    Price = p.Book.Price
+                } : null,
+                User = p.User != null ? new VM_TbUser
+                {
+                    UserId = p.User.UserId,
+                    UserName = p.User.UserName,
+                    Email = p.User.Email
+                } : null
+            }).ToList();
+            VM_Book_Purchase vM_Book_Purchase = new VM_Book_Purchase
+            {
+                Book = vmBooks,
+                Purchase = vmPurchases
+            };
+            return View("Views/Book/BootStoreWeb.cshtml", vM_Book_Purchase);
         }
         public async Task<IActionResult> BookLists()
         {
@@ -74,6 +100,8 @@ namespace WebApp.Controllers.Book
             }
             return BadRequest();
         }
+
+
 
         public async Task<IActionResult> BookEditView(int id)
         {

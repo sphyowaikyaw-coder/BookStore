@@ -1,4 +1,6 @@
 ﻿using DAO.DAO;
+using Dependency;
+using Service.Business_Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +33,29 @@ namespace Service.Service.ServiceImpl
             {
                 Console.WriteLine($"Error checking user: {ex.Message}");
                 return false;
+            }
+        }
+
+        public async Task<BM_TbUser> GetUserByEmail(string email)
+        {
+            try
+            {
+                TbUser tbUser = await userDAO.GetUserByEmail(email);
+                return new BM_TbUser
+                {
+                    UserId = tbUser.UserId,
+                    UserName = tbUser.UserName,
+                    Email = tbUser.Email,
+                    Password = tbUser.Password,
+                    IsActive = tbUser.IsActive,
+                    IsBlock = tbUser.IsBlock,
+                    IsDelete = tbUser.IsDelete
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting user by email: {ex.Message}");
+                return null;
             }
         }
     }
